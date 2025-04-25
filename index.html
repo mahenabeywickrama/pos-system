@@ -49,23 +49,23 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link">
+                    <a href="#" class="nav-link" id="dashboard-btn">
                         <i class="bi bi-bar-chart fs-4"></i>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link">
-                        <i class="bi bi-people fs-4"></i>
+                    <a href="#" class="nav-link" id="customer-btn">
+                        <i class="bi bi-person fs-4"></i>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link">
-                        <i class="bi bi-bag fs-4"></i>
+                    <a href="#" class="nav-link" id="item-btn">
+                        <i class="bi bi-box fs-4"></i>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link">
-                        <i class="bi bi-cart fs-4"></i>
+                    <a href="#" class="nav-link" id="order-btn">
+                        <i class="bi bi-bag-check fs-4"></i>
                     </a>
                 </li>
                 <li>
@@ -85,11 +85,188 @@
             <div class="topbar">
                 Home
             </div>
+            <!--customer content-->
+            <section id="customer-content" style="display: none;">
+                <div class="container mt-3">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <form class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="fname" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="fname">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="lname" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="lname">
+                                </div>
+                                <div class="col-12">
+                                    <label for="address" class="form-label">Address</label>
+                                    <textarea class="form-control" id="address" rows="3"></textarea>
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button id="student_save" type="button" class="btn btn-primary me-2">Save</button>
+                                    <button id="student_reset" type="button" class="btn btn-secondary">Reset</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <h5>Customer List</h5>
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>First</th>
+                            <th>Last</th>
+                            <th>Address</th>
+                        </tr>
+                        </thead>
+                        <tbody id="student-tbody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!--item content-->
+            <section id="item-content" style="display: none;">
+                <div class="container mt-3">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <form class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="item" class="form-label">Item</label>
+                                    <input type="text" class="form-control" id="item">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="qty" class="form-label">Quantity</label>
+                                    <input type="text" class="form-control" id="qty">
+                                </div>
+                                <div class="col-12">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea class="form-control" id="description" rows="3"></textarea>
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button type="button" class="btn btn-primary me-2">Save</button>
+                                    <button type="button" class="btn btn-secondary">Reset</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <h5>Item List</h5>
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- place order content -->
+            <section id="order-content" style="display: none;">
+                <div class="container mt-3">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <form class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="order-customer" class="form-label">Select Customer</label>
+                                    <select class="form-select" id="order-customer">
+                                        <option selected disabled>Choose...</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="order-date" class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="order-date">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="order-item" class="form-label">Select Item</label>
+                                    <select class="form-select" id="order-item">
+                                        <option selected disabled>Choose...</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="order-qty" class="form-label">Quantity</label>
+                                    <input type="number" class="form-control" id="order-qty" min="1">
+                                </div>
+
+                                <div class="col-md-4 align-self-end">
+                                    <button type="button" class="btn btn-success w-100" id="add-to-order">Add to Order</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <h5>Order Summary</h5>
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Remove</th>
+                        </tr>
+                        </thead>
+                        <tbody id="order-summary">
+                        </tbody>
+                    </table>
+
+                    <div class="text-end">
+                        <button class="btn btn-primary">Place Order</button>
+                    </div>
+                </div>
+            </section>
+
+
         </div>
 
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/lib/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $('#customer-content').css('display', 'none');
+    $('#item-content').css('display', 'none');
+    $('#order-content').css('display', 'none');
+
+    $('#dashboard-btn').on('click', function () {
+        $('.topbar').text('Dashboard')
+
+    })
+
+    $('#customer-btn').on('click', function () {
+        $('.topbar').text('Customer')
+        $('#customer-content').css('display', 'block');
+        $('#item-content').css('display', 'none');
+        $('#order-content').css('display', 'none');
+    });
+
+    $('#item-btn').on('click', function () {
+        $('.topbar').text('Item')
+        $('#customer-content').css('display', 'none');
+        $('#item-content').css('display', 'block');
+        $('#order-content').css('display', 'none');
+    });
+
+    $('#order-btn').on('click', function () {
+        $('.topbar').text('Place Order');
+        $('#customer-content').css('display', 'none');
+        $('#item-content').css('display', 'none');
+        $('#order-content').css('display', 'block');
+    });
+
+</script>
+
 </body>
 </html>
