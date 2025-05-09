@@ -1,0 +1,1 @@
+export let customer_db = [];
