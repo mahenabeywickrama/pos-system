@@ -34,6 +34,12 @@
             font-weight: 500;
             font-size: 1.6em;
         }
+
+        .form-wrapper {
+            max-width: 1800px;
+            margin: auto;
+        }
+
     </style>
 </head>
 <body>
@@ -44,7 +50,7 @@
         <nav class="col-auto bg-light d-flex flex-column align-items-center vh-100 py-3 border-end">
             <ul class="nav nav-pills flex-column mb-auto text-center">
                 <li class="nav-item">
-                    <a href="#" class="nav-link active" aria-current="page">
+                    <a href="#" class="nav-link active" id="home-btn">
                         <i class="bi bi-house-door fs-4"></i>
                     </a>
                 </li>
@@ -87,25 +93,39 @@
             </div>
             <!--customer content-->
             <section id="customer-content" style="display: none;">
-                <div class="container mt-3">
+                <div class="container mt-3 form-wrapper">
                     <div class="card mb-4">
                         <div class="card-body">
                             <form class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <label for="cusid" class="form-label">ID</label>
+                                    <input type="text" class="form-control" id="cusid">
+                                </div>
+                                <div class="col-md-4">
                                     <label for="fname" class="form-label">First Name</label>
                                     <input type="text" class="form-control" id="fname">
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="lname" class="form-label">Last Name</label>
                                     <input type="text" class="form-control" id="lname">
                                 </div>
-                                <div class="col-12">
+                                <div class="col-md-4">
                                     <label for="address" class="form-label">Address</label>
-                                    <textarea class="form-control" id="address" rows="3"></textarea>
+                                    <input type="text" class="form-control" id="address">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="email" class="form-label">E-mail</label>
+                                    <input type="text" class="form-control" id="email">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="text" class="form-control" id="phone">
                                 </div>
                                 <div class="col-12 text-end">
-                                    <button id="student_save" type="button" class="btn btn-primary me-2">Save</button>
-                                    <button id="student_reset" type="button" class="btn btn-secondary">Reset</button>
+                                    <button id="customer_save" type="button" class="btn btn-primary me-2">Save</button>
+                                    <button id="customer_update" type="button" class="btn btn-primary me-2">Update</button>
+                                    <button id="customer_delete" type="button" class="btn btn-primary me-2">Delete</button>
+                                    <button id="customer_reset" type="button" class="btn btn-primary">Reset</button>
                                 </div>
                             </form>
                         </div>
@@ -118,10 +138,12 @@
                             <th>#</th>
                             <th>First</th>
                             <th>Last</th>
+                            <th>E-mail</th>
+                            <th>Phone</th>
                             <th>Address</th>
                         </tr>
                         </thead>
-                        <tbody id="student-tbody">
+                        <tbody id="customer-tbody">
                         </tbody>
                     </table>
                 </div>
@@ -129,25 +151,35 @@
 
             <!--item content-->
             <section id="item-content" style="display: none;">
-                <div class="container mt-3">
+                <div class="container mt-3 form-wrapper">
                     <div class="card mb-4">
                         <div class="card-body">
                             <form class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-md-3">
+                                    <label for="itemid" class="form-label">ID</label>
+                                    <input type="text" class="form-control" id="itemid">
+                                </div>
+                                <div class="col-md-3">
                                     <label for="item" class="form-label">Item</label>
                                     <input type="text" class="form-control" id="item">
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <label for="qty" class="form-label">Quantity</label>
                                     <input type="text" class="form-control" id="qty">
                                 </div>
+                                <div class="col-md-3">
+                                    <label for="price" class="form-label">Price</label>
+                                    <input type="text" class="form-control" id="price">
+                                </div>
                                 <div class="col-12">
                                     <label for="description" class="form-label">Description</label>
-                                    <textarea class="form-control" id="description" rows="3"></textarea>
+                                    <textarea class="form-control" id="description" rows="2"></textarea>
                                 </div>
                                 <div class="col-12 text-end">
-                                    <button type="button" class="btn btn-primary me-2">Save</button>
-                                    <button type="button" class="btn btn-secondary">Reset</button>
+                                    <button id="item_save" type="button" class="btn btn-primary me-2">Save</button>
+                                    <button id="item_update" type="button" class="btn btn-primary me-2">Update</button>
+                                    <button id="item_delete" type="button" class="btn btn-primary me-2">Delete</button>
+                                    <button id="item_reset" type="button" class="btn btn-primary">Reset</button>
                                 </div>
                             </form>
                         </div>
@@ -160,6 +192,7 @@
                             <th>#</th>
                             <th>Item</th>
                             <th>Qty</th>
+                            <th>Price</th>
                             <th>Description</th>
                         </tr>
                         </thead>
@@ -171,7 +204,7 @@
 
             <!-- place order content -->
             <section id="order-content" style="display: none;">
-                <div class="container mt-3">
+                <div class="container mt-3 form-wrapper">
                     <div class="card mb-4">
                         <div class="card-body">
                             <form class="row g-3">
@@ -236,34 +269,32 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    $('#customer-content').css('display', 'none');
-    $('#item-content').css('display', 'none');
-    $('#order-content').css('display', 'none');
+    function showSection(sectionId, title, element) {
+        $('#dashboard-content, #customer-content, #item-content, #order-content').hide();
+        $(sectionId).show();
+        $('.topbar').text(title);
+        $('.nav-link').removeClass('active');
+        $(element).addClass('active');
+    }
+
+    $('#home-btn').on('click', function () {
+        showSection('#home-content', 'Home', this);
+    });
 
     $('#dashboard-btn').on('click', function () {
-        $('.topbar').text('Dashboard')
-
-    })
+        showSection('#dashboard-content', 'Dashboard', this);
+    });
 
     $('#customer-btn').on('click', function () {
-        $('.topbar').text('Customer')
-        $('#customer-content').css('display', 'block');
-        $('#item-content').css('display', 'none');
-        $('#order-content').css('display', 'none');
+        showSection('#customer-content', 'Customer', this);
     });
 
     $('#item-btn').on('click', function () {
-        $('.topbar').text('Item')
-        $('#customer-content').css('display', 'none');
-        $('#item-content').css('display', 'block');
-        $('#order-content').css('display', 'none');
+        showSection('#item-content', 'Item', this);
     });
 
     $('#order-btn').on('click', function () {
-        $('.topbar').text('Place Order');
-        $('#customer-content').css('display', 'none');
-        $('#item-content').css('display', 'none');
-        $('#order-content').css('display', 'block');
+        showSection('#order-content', 'Place Order', this);
     });
 
 </script>
