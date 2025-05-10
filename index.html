@@ -99,7 +99,7 @@
                             <form class="row g-3">
                                 <div class="col-md-4">
                                     <label for="cusid" class="form-label">ID</label>
-                                    <input type="text" class="form-control" id="cusid">
+                                    <input type="text" class="form-control" id="cusid" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="fname" class="form-label">First Name</label>
@@ -157,7 +157,7 @@
                             <form class="row g-3">
                                 <div class="col-md-3">
                                     <label for="itemid" class="form-label">ID</label>
-                                    <input type="text" class="form-control" id="itemid">
+                                    <input type="text" class="form-control" id="itemid" readonly>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="item" class="form-label">Item</label>
@@ -196,7 +196,7 @@
                             <th>Description</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="item-tbody">
                         </tbody>
                     </table>
                 </div>
@@ -269,6 +269,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script type="module" src="controller/CustomerController.js"></script>
+<script type="module" src="controller/ItemController.js"></script>
 
 <script>
     function showSection(sectionId, title, element) {

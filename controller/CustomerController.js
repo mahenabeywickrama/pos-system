@@ -3,8 +3,25 @@ import CustomerModel from "/model/CustomerModel.js";
 
 let selectedIndex = -1;
 
+$(document).ready(function() {
+    loadCustomers();
+    resetCustomerForm();
+});
+
+function generateNextCustomerId() {
+    if (customer_db.length === 0) {
+        return 'C001';
+    }
+
+    let lastId = customer_db[customer_db.length - 1].id;
+    let number = parseInt(lastId.replace('C', '')) + 1;
+
+    return 'C' + number.toString().padStart(3, '0');
+}
+
 function resetCustomerForm() {
-    $('#cusid, #fname, #lname, #email, #phone, #address').val('');
+    $('#cusid').val(generateNextCustomerId());
+    $('#fname, #lname, #email, #phone, #address').val('');
     selectedIndex = -1;
 }
 
@@ -100,12 +117,9 @@ $('#customer_delete').on('click', function () {
 $('#customer_reset').on('click', resetCustomerForm);
 
 $("#customer-tbody").on('click', 'tr', function(){
-    const clickedId = Number($(this).data('id')).toString();
+    const clickedId = $(this).data('id');
     const obj = customer_db.find(c => c.id === clickedId);
     selectedIndex = customer_db.findIndex(c => c.id === clickedId);
-
-    console.log(clickedId)
-    console.log(obj)
 
     if (!obj) return;
 
