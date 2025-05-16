@@ -3,10 +3,10 @@ import CustomerModel from "/model/CustomerModel.js";
 
 let selectedIndex = -1;
 
-$(document).ready(function() {
-    loadCustomers();
-    resetCustomerForm();
-});
+// $(document).ready(function() {
+//     loadCustomers();
+//     resetCustomerForm();
+// });
 
 function generateNextCustomerId() {
     if (customer_db.length === 0) {
@@ -19,13 +19,13 @@ function generateNextCustomerId() {
     return 'C' + number.toString().padStart(3, '0');
 }
 
-function resetCustomerForm() {
-    $('#cusid').val(generateNextCustomerId());
+export function resetCustomerForm() {
+    $('#cus-id').val(generateNextCustomerId());
     $('#fname, #lname, #email, #phone, #address').val('');
     selectedIndex = -1;
 }
 
-function loadCustomers() {
+export function loadCustomers() {
     const tbody = $('#customer-tbody');
     tbody.empty();
 
@@ -42,8 +42,8 @@ function loadCustomers() {
     });
 }
 
-$('#customer_save').on('click', function(){
-    let id = $('#cusid').val().trim();
+$('#customer_save').off('click').on('click', function(){
+    let id = $('#cus-id').val().trim();
     let fname = $('#fname').val().trim();
     let lname = $('#lname').val().trim();
     let address = $('#address').val().trim();
@@ -69,13 +69,13 @@ $('#customer_save').on('click', function(){
     Swal.fire({title: "Added Successfully!", icon: "success"});
 });
 
-$('#customer_update').on('click', function () {
+$('#customer_update').off('click').on('click', function () {
     if (selectedIndex === -1) {
         Swal.fire({title: "No Selection!", text: "Please select a customer to update.", icon: "info", confirmButtonText: "Ok"})
         return;
     }
 
-    let id = $('#cusid').val();
+    let id = $('#cus-id').val();
     let fname = $('#fname').val();
     let lname = $('#lname').val();
     let address = $('#address').val();
@@ -90,7 +90,7 @@ $('#customer_update').on('click', function () {
     Swal.fire({title: "Updated Successfully!", icon: "success", draggable: true});
 })
 
-$('#customer_delete').on('click', function () {
+$('#customer_delete').off('click').on('click', function () {
     if (selectedIndex === -1) {
         Swal.fire({title: "No Selection!", text: "Please select a customer to delete.", icon: "info", confirmButtonText: "Ok"})
         return;
@@ -114,16 +114,16 @@ $('#customer_delete').on('click', function () {
 });
 
 
-$('#customer_reset').on('click', resetCustomerForm);
+$('#customer_reset').off('click').on('click', resetCustomerForm);
 
-$("#customer-tbody").on('click', 'tr', function(){
+$("#customer-tbody").off('click').on('click', 'tr', function(){
     const clickedId = $(this).data('id');
     const obj = customer_db.find(c => c.id === clickedId);
     selectedIndex = customer_db.findIndex(c => c.id === clickedId);
 
     if (!obj) return;
 
-    $("#cusid").val(obj.id);
+    $("#cus-id").val(obj.id);
     $("#fname").val(obj.fname);
     $("#lname").val(obj.lname);
     $("#address").val(obj.address);

@@ -40,6 +40,10 @@
             margin: auto;
         }
 
+        .buttons {
+            margin-top: 48px;
+        }
+
     </style>
 </head>
 <body>
@@ -97,17 +101,21 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             <form class="row g-3">
-                                <div class="col-md-4">
-                                    <label for="cusid" class="form-label">ID</label>
-                                    <input type="text" class="form-control" id="cusid" readonly>
+                                <div class="col-md-3">
+                                    <label for="cus-id" class="form-label">ID</label>
+                                    <input type="text" class="form-control" id="cus-id" readonly>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="fname" class="form-label">First Name</label>
                                     <input type="text" class="form-control" id="fname">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="lname" class="form-label">Last Name</label>
                                     <input type="text" class="form-control" id="lname">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="tel" class="form-control" id="phone">
                                 </div>
                                 <div class="col-md-4">
                                     <label for="address" class="form-label">Address</label>
@@ -115,13 +123,9 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="email" class="form-label">E-mail</label>
-                                    <input type="text" class="form-control" id="email">
+                                    <input type="email" class="form-control" id="email">
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="phone" class="form-label">Phone</label>
-                                    <input type="text" class="form-control" id="phone">
-                                </div>
-                                <div class="col-12 text-end">
+                                <div class="col-md-4 text-end buttons">
                                     <button id="customer_save" type="button" class="btn btn-primary me-2">Save</button>
                                     <button id="customer_update" type="button" class="btn btn-primary me-2">Update</button>
                                     <button id="customer_delete" type="button" class="btn btn-primary me-2">Delete</button>
@@ -156,8 +160,8 @@
                         <div class="card-body">
                             <form class="row g-3">
                                 <div class="col-md-3">
-                                    <label for="itemid" class="form-label">ID</label>
-                                    <input type="text" class="form-control" id="itemid" readonly>
+                                    <label for="item-id" class="form-label">ID</label>
+                                    <input type="text" class="form-control" id="item-id" readonly>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="item" class="form-label">Item</label>
@@ -165,17 +169,17 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label for="qty" class="form-label">Quantity</label>
-                                    <input type="text" class="form-control" id="qty">
+                                    <input type="number" min="0" class="form-control" id="qty">
                                 </div>
                                 <div class="col-md-3">
                                     <label for="price" class="form-label">Price</label>
-                                    <input type="text" class="form-control" id="price">
+                                    <input type="number" step="0.01" min="0" name="price" class="form-control" id="price">
                                 </div>
-                                <div class="col-12">
+                                <div class="col-md-9">
                                     <label for="description" class="form-label">Description</label>
-                                    <textarea class="form-control" id="description" rows="2"></textarea>
+                                    <input type="text" class="form-control" id="description">
                                 </div>
-                                <div class="col-12 text-end">
+                                <div class="col-md-3 text-end buttons">
                                     <button id="item_save" type="button" class="btn btn-primary me-2">Save</button>
                                     <button id="item_update" type="button" class="btn btn-primary me-2">Update</button>
                                     <button id="item_delete" type="button" class="btn btn-primary me-2">Delete</button>
@@ -208,43 +212,71 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             <form class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-md-3">
+                                    <label for="order-id" class="form-label">ID</label>
+                                    <input type="text" class="form-control" id="order-id" readonly>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="order-date" class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="order-date">
+                                </div>
+
+                                <div class="col-md-3">
                                     <label for="order-customer" class="form-label">Select Customer</label>
                                     <select class="form-select" id="order-customer">
                                         <option selected disabled>Choose...</option>
                                     </select>
                                 </div>
 
-                                <div class="col-md-6">
-                                    <label for="order-date" class="form-label">Date</label>
-                                    <input type="date" class="form-control" id="order-date">
+                                <div class="col-md-3">
+                                    <label for="cus-name" class="form-label">Customer Name</label>
+                                    <input type="text" class="form-control" id="cus-name" readonly>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="order-item" class="form-label">Select Item</label>
                                     <select class="form-select" id="order-item">
                                         <option selected disabled>Choose...</option>
                                     </select>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-md-3">
+                                    <label for="item-name" class="form-label">Item Name</label>
+                                    <input type="text" class="form-control" id="item-name" readonly>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="qoh" class="form-label">Quantity On Hand</label>
+                                    <input type="number" class="form-control" id="qoh" min="1" readonly>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="unit-price" class="form-label">Price</label>
+                                    <input type="number" step="0.01" min="0" name="price" class="form-control" id="unit-price" readonly>
+                                </div>
+
+                                <div class="col-md-3">
                                     <label for="order-qty" class="form-label">Quantity</label>
                                     <input type="number" class="form-control" id="order-qty" min="1">
                                 </div>
 
-                                <div class="col-md-4 align-self-end">
-                                    <button type="button" class="btn btn-success w-100" id="add-to-order">Add to Order</button>
+                                <div class="col-md-2 align-self-end">
+                                    <button type="button" class="btn btn-success w-100" id="add-to-order">Add to Cart</button>
                                 </div>
                             </form>
                         </div>
                     </div>
 
-                    <h5>Order Summary</h5>
+                    <h5>Item Cart</h5>
                     <table class="table table-bordered">
                         <thead class="table-light">
                         <tr>
+                            <th>#</th>
                             <th>Item</th>
                             <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Total Price</th>
                             <th>Remove</th>
                         </tr>
                         </thead>
@@ -252,9 +284,24 @@
                         </tbody>
                     </table>
 
-                    <div class="text-end">
-                        <button class="btn btn-primary">Place Order</button>
+                    <div class="col-12 text-end buttons mt-4">
+                        <button id="order_place" type="button" class="btn btn-success me-2">Place Order</button>
+                        <button id="order_reset" type="button" class="btn btn-secondary">Reset</button>
                     </div>
+
+                    <h5>Order History</h5>
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Customer</th>
+                            <th>Total</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                        <tbody id="order-tbody">
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
@@ -270,37 +317,9 @@
 
 <script type="module" src="controller/CustomerController.js"></script>
 <script type="module" src="controller/ItemController.js"></script>
+<script type="module" src="controller/OrdersController.js"></script>
 
-<script>
-    function showSection(sectionId, title, element) {
-        $('#dashboard-content, #customer-content, #item-content, #order-content').hide();
-        $(sectionId).show();
-        $('.topbar').text(title);
-        $('.nav-link').removeClass('active');
-        $(element).addClass('active');
-    }
-
-    $('#home-btn').on('click', function () {
-        showSection('#home-content', 'Home', this);
-    });
-
-    $('#dashboard-btn').on('click', function () {
-        showSection('#dashboard-content', 'Dashboard', this);
-    });
-
-    $('#customer-btn').on('click', function () {
-        showSection('#customer-content', 'Customer', this);
-    });
-
-    $('#item-btn').on('click', function () {
-        showSection('#item-content', 'Item', this);
-    });
-
-    $('#order-btn').on('click', function () {
-        showSection('#order-content', 'Place Order', this);
-    });
-
-</script>
+<script type="module" src="controller/MainController.js"></script>
 
 </body>
 </html>

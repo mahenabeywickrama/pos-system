@@ -3,10 +3,10 @@ import ItemModel from "/model/ItemModel.js";
 
 let selectedIndex = -1;
 
-$(document).ready(function() {
-    loadItems();
-    resetItemForm();
-});
+// $(document).ready(function() {
+//     loadItems();
+//     resetItemForm();
+// });
 
 function generateNextItemId() {
     if (item_db.length === 0) {
@@ -19,13 +19,13 @@ function generateNextItemId() {
     return 'I' + number.toString().padStart(3, '0');
 }
 
-function resetItemForm() {
-    $('#itemid').val(generateNextItemId())
+export function resetItemForm() {
+    $('#item-id').val(generateNextItemId())
     $('#item, #qty, #price, #description').val('');
     selectedIndex = -1;
 }
 
-function loadItems() {
+export function loadItems() {
     const tbody = $('#item-tbody');
     tbody.empty();
 
@@ -41,8 +41,8 @@ function loadItems() {
     });
 }
 
-$('#item_save').on('click', function(){
-    let id = $('#itemid').val().trim();
+$('#item_save').off('click').on('click', function(){
+    let id = $('#item-id').val().trim();
     let name = $('#item').val().trim();
     let qty = $('#qty').val().trim();
     let price = $('#price').val().trim();
@@ -67,13 +67,13 @@ $('#item_save').on('click', function(){
     Swal.fire({title: "Added Successfully!", icon: "success"});
 });
 
-$('#item_update').on('click', function () {
+$('#item_update').off('click').on('click', function () {
     if (selectedIndex === -1) {
         Swal.fire({title: "No Selection!", text: "Please select a item to update.", icon: "info", confirmButtonText: "Ok"})
         return;
     }
 
-    let id = $('#itemid').val();
+    let id = $('#item-id').val();
     let name = $('#item').val();
     let qty = $('#qty').val();
     let price = $('#price').val();
@@ -87,7 +87,7 @@ $('#item_update').on('click', function () {
     Swal.fire({title: "Updated Successfully!", icon: "success", draggable: true});
 })
 
-$('#item_delete').on('click', function () {
+$('#item_delete').off('click').on('click', function () {
     if (selectedIndex === -1) {
         Swal.fire({title: "No Selection!", text: "Please select a item to delete.", icon: "info", confirmButtonText: "Ok"})
         return;
@@ -110,16 +110,16 @@ $('#item_delete').on('click', function () {
     });
 });
 
-$('#item_reset').on('click', resetItemForm);
+$('#item_reset').off('click').on('click', resetItemForm);
 
-$("#item-tbody").on('click', 'tr', function(){
+$("#item-tbody").off('click').on('click', 'tr', function(){
     const clickedId = $(this).data('id');
     const obj = item_db.find(i => i.id === clickedId);
     selectedIndex = item_db.findIndex(i => i.id === clickedId);
 
     if (!obj) return;
 
-    $("#itemid").val(obj.id);
+    $("#item-id").val(obj.id);
     $("#item").val(obj.name);
     $("#qty").val(obj.qty);
     $("#price").val(obj.price);
