@@ -69,6 +69,44 @@ function loadItemsCmb() {
     });
 }
 
+$('#search-cus-btn').off('click').on('click', () => {
+    const inputId = $('#search-cus-id').val().trim();
+
+    if (!inputId) {
+        Swal.fire({title: "Error!", text: "Please enter a Customer ID.", icon: "error"});
+        return;
+    }
+
+    const customer = customer_db.find(cus => cus.id === inputId);
+
+    if (customer) {
+        $('#order-customer').val(customer.id);
+        $('#cus-name').val(`${customer.fname} ${customer.lname}`);
+    } else {
+        Swal.fire({title: "Error!", text: "Customer ID not found!", icon: "error"});
+    }
+});
+
+$('#search-item-btn').off('click').on('click', () => {
+    const inputId = $('#search-item-id').val().trim();
+
+    if (!inputId) {
+        Swal.fire({title: "Error!", text: "Please enter an Item ID..", icon: "error"});
+        return;
+    }
+
+    const item = item_db.find(it => it.id === inputId);
+
+    if (item) {
+        $('#order-item').val(item.id);
+        $('#item-name').val(item.name);
+        $('#qoh').val(item.qty);
+        $('#unit-price').val(item.price);
+    } else {
+        Swal.fire({title: "Error!", text: "Item ID not found!", icon: "error"});
+    }
+});
+
 $('#order-customer').change(function () {
     const selectedCustomerId = $(this).val();
     let customerName = null;
@@ -81,6 +119,7 @@ $('#order-customer').change(function () {
 
     if (customerName != null) {
         $('#cus-name').val(customerName);
+        $('#search-cus-id').val(selectedCustomerId);
     }
 });
 
@@ -102,6 +141,7 @@ $('#order-item').change(function () {
         $('#item-name').val(itemName);
         $('#qoh').val(qoh);
         $('#unit-price').val(price);
+        $('#search-item-id').val(selectedItemId);
     }
 });
 
