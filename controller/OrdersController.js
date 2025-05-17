@@ -13,6 +13,9 @@ import OrdersItemModel from "/model/OrdersItemModel.js";
 //     resetOrderForm();
 // });
 
+let cart = [];
+let itemCount = 0;
+
 function generateNextOrderId() {
     if (orders_db.length === 0) {
         return 'O001';
@@ -25,10 +28,17 @@ function generateNextOrderId() {
 }
 
 export function resetOrderForm() {
+    cart = [];
+    itemCount = 0;
+    updateCartTable();
+
     $('#order-id').val(generateNextOrderId())
     $('#order-date, #cus-name, #item-name, #qoh, #unit-price, #order-qty').val('');
     $('#order-customer').prop('selectedIndex', 0);
     $('#order-item').prop('selectedIndex', 0);
+
+    $('#search-cus-id').val('')
+    $('#search-item-id').val('')
 
     loadCustomersCmb();
     loadItemsCmb();
@@ -144,5 +154,113 @@ $('#order-item').change(function () {
         $('#search-item-id').val(selectedItemId);
     }
 });
+
+$('#add-to-cart').off('click').on('click', function () {
+    const itemId = $('#search-item-id').val();
+    const itemName = $('#item-name').val();
+    const qoh = parseInt($('#qoh').val());
+    const unitPrice = parseFloat($('#unit-price').val());
+    const orderQty = parseInt($('#order-qty').val());
+
+    if (!itemId || isNaN(orderQty) || orderQty <= 0) {
+        Swal.fire({title: "Error!", text: "Please select an item and enter a valid quantity.", icon: "error"});
+        return;
+    }
+
+    const existingItem = cart.find(item => item.itemId === itemId);
+
+    if (existingItem) {
+        const newTotalQty = existingItem.quantity + orderQty;
+
+        if (newTotalQty > qoh) {
+            Swal.fire({title: "Error!", text: "Total quantity in cart exceeds available stock.", icon: "error"});
+            return;
+        }
+
+        existingItem.quantity = newTotalQty;
+        existingItem.total = newTotalQty * unitPrice;
+    } else {
+        if (orderQty > qoh) {
+            Swal.fire({title: "Error!", text: "Order quantity exceeds available stock.", icon: "error"});
+            return;
+        }
+
+        const cartItem = {
+            id: itemCount++,
+            itemId: itemId,
+            itemName,
+            quantity: orderQty,
+            unitPrice,
+            total: orderQty * unitPrice
+        };
+
+        $('#order-qty').val('');
+
+        cart.push(cartItem);
+    }
+
+    updateCartTable();
+});
+
+function updateCartTable() {
+    const tbody = $('#order-summary');
+    tbody.empty();
+
+    let subTotal = 0;
+
+    cart.forEach((item, index) => {
+        subTotal += item.total;
+
+        let itemRow = `
+            <tr>
+                <td>${item.id}</td>
+                <td>${item.itemName}</td>
+                <td>${item.quantity}</td>
+                <td>${item.unitPrice.toFixed(2)}</td>
+                <td>${item.total.toFixed(2)}</td>
+                <td><button class="btn btn-sm btn-danger" onclick="removeCartItem(${index})">🗑</button></td>
+            </tr>
+        `;
+
+        tbody.append(itemRow);
+    });
+
+    $('#subtotal').val(subTotal.toFixed(2));
+    updateTotal();
+}
+
+$('#discount').off('input').on('input', updateTotal);
+
+function updateTotal() {
+    const subtotal = parseFloat($('#subtotal').val()) || 0;
+    const discountPercentage = parseFloat($('#discount').val()) || 0;
+
+    if (discountPercentage > 100) {
+        Swal.fire({title: "Error!", text: "Invalid Discount.", icon: "error"});
+        $('#discount').val('');
+        $('#total').val(0.00);
+        $('#discount-amount').val(0.00);
+        return;
+    }
+
+    const validDiscount = Math.min(Math.max(discountPercentage, 0), 100);
+
+    const discountAmount = (subtotal * validDiscount) / 100;
+    const total = subtotal - discountAmount;
+
+    $('#total').val(total.toFixed(2));
+    $('#discount-amount').val(discountAmount.toFixed(2));
+}
+
+
+$('#order-summary').off('click', '.btn-danger').on('click', '.btn-danger', function() {
+    const index = $(this).closest('tr').index();
+    removeCartItem(index);
+});
+
+function removeCartItem(index) {
+    cart.splice(index, 1);
+    updateCartTable();
+}
 
 $('#order_reset').off('click').on('click', resetOrderForm);

@@ -13,20 +13,43 @@
         }
 
         .nav-link {
-            color: #333;
+            color: white !important;
+            background-color: transparent;
         }
 
-        .nav-link:hover {
-            background-color: #e9ecef;
+        .nav-link:focus,
+        .nav-link:active {
+            color: white !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
+            outline: none !important;
         }
 
         .nav-link.active {
-            background-color: #dee2e6;
+            background-color: black !important;
+            color: white !important;
+        }
+
+        .nav-link:hover {
+            background-color: black;
+            color: white !important;
+        }
+
+        .nav-link .bi {
+            color: black !important;
+        }
+
+        .nav-link.active .bi {
+            color: white !important;
+        }
+
+        .nav-link:hover .bi {
+            color: white !important;
         }
 
         .topbar {
             height: 64px;
-            background-color: #0D6EFE;
+            background-color: #000000;
             color: white;
             display: flex;
             align-items: center;
@@ -43,7 +66,6 @@
         .buttons {
             margin-top: 48px;
         }
-
     </style>
 </head>
 <body>
@@ -291,7 +313,7 @@
                                             <input type="number" class="form-control" id="order-qty" min="1">
                                         </div>
                                         <div class="col-md-3 d-flex align-items-end">
-                                            <button type="button" class="btn btn-success w-100" id="add-to-order">Add to Cart</button>
+                                            <button type="button" class="btn btn-success w-100" id="add-to-cart">Add to Cart</button>
                                         </div>
                                     </div>
                                 </div>
@@ -299,20 +321,61 @@
                         </div>
                     </div>
 
-                    <h5>Item Cart</h5>
-                    <table class="table table-bordered">
-                        <thead class="table-light">
-                        <tr>
-                            <th>#</th>
-                            <th>Item</th>
-                            <th>Quantity</th>
-                            <th>Unit Price</th>
-                            <th>Total Price</th>
-                            <th>Remove</th>
-                        </tr>
-                        </thead>
-                        <tbody id="order-summary"></tbody>
-                    </table>
+                    <div class="row mt-4">
+                        <div class="col-md-9">
+                            <table class="table table-bordered">
+                                <thead class="table-dark">
+                                <tr>
+                                    <th>Item ID</th>
+                                    <th>Item Name</th>
+                                    <th>Qty</th>
+                                    <th>Unit Price</th>
+                                    <th>Total Price</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody id="order-summary">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Summary</h5>
+                                    <div class="mb-3">
+                                        <label for="subtotal" class="form-label">Subtotal</label>
+                                        <input type="text" id="subtotal" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="discount" class="form-label">Discount (%)</label>
+                                        <input type="number" id="discount" class="form-control" value="0">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="discount-amount">Discount Amount</label>
+                                        <input type="text" id="discount-amount" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="total" class="form-label">Total</label>
+                                        <input type="text" id="total" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="cash" class="form-label">Cash</label>
+                                        <input type="text" id="cash" class="form-control">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="order-balance" class="form-label">Balance:</label>
+                                        <input type="text" id="order-balance" class="form-control" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="col-12 text-end buttons mt-4">
                         <button id="order_place" type="button" class="btn btn-success me-2">Place Order</button>
