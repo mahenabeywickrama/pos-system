@@ -1,17 +1,10 @@
-import {customer_db} from "/db/db.js";
-import {item_db} from "/db/db.js";
-import {orders_db} from "/db/db.js";
-import {ordersItem_db} from "/db/db.js";
+import { customer_db } from "/db/db.js";
+import { item_db } from "/db/db.js";
+import { orders_db } from "/db/db.js";
+import { ordersItem_db } from "/db/db.js";
 
-import CustomerModel from "/model/CustomerModel.js";
-import ItemModel from "/model/ItemModel.js";
 import OrdersModel from "/model/OrdersModel.js";
 import OrdersItemModel from "/model/OrdersItemModel.js";
-
-// $(document).ready(function() {
-//     loadOrders();
-//     resetOrderForm();
-// });
 
 let cart = [];
 let itemCount = 0;
@@ -32,13 +25,18 @@ export function resetOrderForm() {
     itemCount = 0;
     updateCartTable();
 
-    $('#order-id').val(generateNextOrderId())
+    $('#order-date').val(new Date().toISOString().split('T')[0]);
+
+    $('#order-id').val(generateNextOrderId());
     $('#order-date, #cus-name, #item-name, #qoh, #unit-price, #order-qty').val('');
     $('#order-customer').prop('selectedIndex', 0);
     $('#order-item').prop('selectedIndex', 0);
-
-    $('#search-cus-id').val('')
-    $('#search-item-id').val('')
+    $('#search-cus-id').val('');
+    $('#search-item-id').val('');
+    $('#discount').val('');
+    $('#discount-amount').val('');
+    $('#total').val('');
+    $('#subtotal').val('');
 
     loadCustomersCmb();
     loadItemsCmb();
@@ -64,8 +62,7 @@ function loadCustomersCmb() {
     cmbCustomers.empty().append('<option selected disabled>Choose...</option>');
 
     customer_db.forEach((item) => {
-        let option = `<option value="${item.id}">${item.id}</option>`;
-        cmbCustomers.append(option);
+        cmbCustomers.append(`<option value="${item.id}">${item.id}</option>`);
     });
 }
 
@@ -74,84 +71,63 @@ function loadItemsCmb() {
     cmbItems.empty().append('<option selected disabled>Choose...</option>');
 
     item_db.forEach((item) => {
-        let option = `<option value="${item.id}">${item.id}</option>`;
-        cmbItems.append(option);
+        cmbItems.append(`<option value="${item.id}">${item.id}</option>`);
     });
 }
 
 $('#search-cus-btn').off('click').on('click', () => {
     const inputId = $('#search-cus-id').val().trim();
-
     if (!inputId) {
-        Swal.fire({title: "Error!", text: "Please enter a Customer ID.", icon: "error"});
+        Swal.fire({ title: "Error!", text: "Please enter a Customer ID.", icon: "error" });
         return;
     }
 
     const customer = customer_db.find(cus => cus.id === inputId);
-
     if (customer) {
         $('#order-customer').val(customer.id);
         $('#cus-name').val(`${customer.fname} ${customer.lname}`);
     } else {
-        Swal.fire({title: "Error!", text: "Customer ID not found!", icon: "error"});
+        Swal.fire({ title: "Error!", text: "Customer ID not found!", icon: "error" });
     }
 });
 
 $('#search-item-btn').off('click').on('click', () => {
     const inputId = $('#search-item-id').val().trim();
-
     if (!inputId) {
-        Swal.fire({title: "Error!", text: "Please enter an Item ID..", icon: "error"});
+        Swal.fire({ title: "Error!", text: "Please enter an Item ID.", icon: "error" });
         return;
     }
 
     const item = item_db.find(it => it.id === inputId);
-
     if (item) {
         $('#order-item').val(item.id);
         $('#item-name').val(item.name);
         $('#qoh').val(item.qty);
         $('#unit-price').val(item.price);
     } else {
-        Swal.fire({title: "Error!", text: "Item ID not found!", icon: "error"});
+        Swal.fire({ title: "Error!", text: "Item ID not found!", icon: "error" });
     }
 });
 
 $('#order-customer').change(function () {
-    const selectedCustomerId = $(this).val();
-    let customerName = null;
+    const selectedId = $(this).val();
+    const customer = customer_db.find(item => item.id === selectedId);
 
-    customer_db.forEach(item => {
-        if (item.id === selectedCustomerId) {
-            customerName = item.fname + " " + item.lname;
-        }
-    })
-
-    if (customerName != null) {
-        $('#cus-name').val(customerName);
-        $('#search-cus-id').val(selectedCustomerId);
+    if (customer) {
+        $('#cus-name').val(customer.fname + " " + customer.lname);
+        $('#search-cus-id').val(selectedId);
     }
 });
 
 $('#order-item').change(function () {
-    const selectedItemId = $(this).val();
-    let itemName = null;
-    let qoh = null;
-    let price = null;
+    const selectedId = $(this).val();
+    const item = item_db.find(it => it.id === selectedId);
 
-    item_db.forEach(item => {
-        if (item.id === selectedItemId) {
-            itemName = item.name;
-            qoh = item.qty;
-            price = item.price;
-        }
-    })
-
-    if (itemName != null && qoh!= null && price!= null) {
-        $('#item-name').val(itemName);
-        $('#qoh').val(qoh);
-        $('#unit-price').val(price);
-        $('#search-item-id').val(selectedItemId);
+    if (item) {
+        $('#item-name').val(item.name);
+        $('#qoh').val(item.qty);
+        $('#unit-price').val(item.price);
+        $('#search-item-id').val(item.id);
     }
 });
 
@@ -163,7 +139,7 @@ $('#add-to-cart').off('click').on('click', function () {
     const orderQty = parseInt($('#order-qty').val());
 
     if (!itemId || isNaN(orderQty) || orderQty <= 0) {
-        Swal.fire({title: "Error!", text: "Please select an item and enter a valid quantity.", icon: "error"});
+        Swal.fire({ title: "Error!", text: "Please select an item and enter a valid quantity.", icon: "error" });
         return;
     }
 
@@ -171,96 +147,109 @@ $('#add-to-cart').off('click').on('click', function () {
 
     if (existingItem) {
         const newTotalQty = existingItem.quantity + orderQty;
-
         if (newTotalQty > qoh) {
-            Swal.fire({title: "Error!", text: "Total quantity in cart exceeds available stock.", icon: "error"});
+            Swal.fire({ title: "Error!", text: "Total quantity exceeds stock.", icon: "error" });
             return;
         }
-
         existingItem.quantity = newTotalQty;
         existingItem.total = newTotalQty * unitPrice;
     } else {
         if (orderQty > qoh) {
-            Swal.fire({title: "Error!", text: "Order quantity exceeds available stock.", icon: "error"});
+            Swal.fire({ title: "Error!", text: "Order quantity exceeds stock.", icon: "error" });
             return;
         }
-
-        const cartItem = {
+        cart.push({
             id: itemCount++,
-            itemId: itemId,
+            itemId,
             itemName,
             quantity: orderQty,
             unitPrice,
             total: orderQty * unitPrice
-        };
-
-        $('#order-qty').val('');
-
-        cart.push(cartItem);
+        });
     }
 
+    $('#order-qty').val('');
     updateCartTable();
 });
 
 function updateCartTable() {
     const tbody = $('#order-summary');
     tbody.empty();
-
     let subTotal = 0;
 
     cart.forEach((item, index) => {
         subTotal += item.total;
-
-        let itemRow = `
+        tbody.append(`
             <tr>
                 <td>${item.id}</td>
                 <td>${item.itemName}</td>
                 <td>${item.quantity}</td>
                 <td>${item.unitPrice.toFixed(2)}</td>
                 <td>${item.total.toFixed(2)}</td>
-                <td><button class="btn btn-sm btn-danger" onclick="removeCartItem(${index})">🗑</button></td>
+                <td><button class="btn btn-sm btn-danger">🗑</button></td>
             </tr>
-        `;
-
-        tbody.append(itemRow);
+        `);
     });
 
     $('#subtotal').val(subTotal.toFixed(2));
     updateTotal();
 }
 
-$('#discount').off('input').on('input', updateTotal);
+$('#order-summary').off('click').on('click', '.btn-danger', function () {
+    const index = $(this).closest('tr').index();
+    cart.splice(index, 1);
+    updateCartTable();
+});
+
+$('#discount').on('input', updateTotal);
 
 function updateTotal() {
     const subtotal = parseFloat($('#subtotal').val()) || 0;
-    const discountPercentage = parseFloat($('#discount').val()) || 0;
+    const discount = parseFloat($('#discount').val()) || 0;
+    const MAX_DISCOUNT = 100;
 
-    if (discountPercentage > 100) {
-        Swal.fire({title: "Error!", text: "Invalid Discount.", icon: "error"});
+    if (discount > MAX_DISCOUNT) {
+        Swal.fire({ title: "Error!", text: "Invalid Discount.", icon: "error" });
         $('#discount').val('');
-        $('#total').val(0.00);
-        $('#discount-amount').val(0.00);
+        $('#total').val('0.00');
+        $('#discount-amount').val('0.00');
         return;
     }
 
-    const validDiscount = Math.min(Math.max(discountPercentage, 0), 100);
-
-    const discountAmount = (subtotal * validDiscount) / 100;
+    const discountAmount = (subtotal * discount) / 100;
     const total = subtotal - discountAmount;
 
-    $('#total').val(total.toFixed(2));
     $('#discount-amount').val(discountAmount.toFixed(2));
+    $('#total').val(total.toFixed(2));
 }
 
+$('#order_place').off('click').on('click', () => {
+    const orderId = $('#order-id').val();
+    const date = $('#order-date').val();
+    const customerId = $('#search-cus-id').val();
+    const total = parseFloat($('#total').val());
 
-$('#order-summary').off('click', '.btn-danger').on('click', '.btn-danger', function() {
-    const index = $(this).closest('tr').index();
-    removeCartItem(index);
+    if (!orderId || !date || !customerId || cart.length === 0 || isNaN(total)) {
+        Swal.fire({ title: "Error!", text: "Please fill all order details correctly.", icon: "error" });
+        return;
+    }
+
+    const newOrder = new OrdersModel(orderId, customerId, total.toFixed(2), date);
+    orders_db.push(newOrder);
+
+    cart.forEach(cartItem => {
+        const orderItem = new OrdersItemModel(orderId, cartItem.itemId, cartItem.quantity, cartItem.unitPrice);
+        ordersItem_db.push(orderItem);
+
+        const item = item_db.find(i => i.id === cartItem.itemId);
+        if (item) {
+            item.qty -= cartItem.quantity;
+        }
+    });
+
+    Swal.fire({ title: "Success!", text: "Order placed successfully.", icon: "success" });
+    resetOrderForm();
+    loadOrders();
 });
-
-function removeCartItem(index) {
-    cart.splice(index, 1);
-    updateCartTable();
-}
 
 $('#order_reset').off('click').on('click', resetOrderForm);
