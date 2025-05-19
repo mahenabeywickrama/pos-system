@@ -35,3 +35,9 @@ $('#order-btn').on('click', function () {
     loadOrders();
     resetOrderForm();
 });
+
+$(document).on('keydown', function(event) {
+    if (event.key === 'Tab') {
+        event.preventDefault();
+    }
+});

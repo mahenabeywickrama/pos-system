@@ -25,10 +25,11 @@ export function resetOrderForm() {
     itemCount = 0;
     updateCartTable();
 
-    $('#order-date').val(new Date().toISOString().split('T')[0]);
+    const today = new Date().toISOString().split('T')[0];
+    $('#order-date').val(today);
 
     $('#order-id').val(generateNextOrderId());
-    $('#order-date, #cus-name, #item-name, #qoh, #unit-price, #order-qty').val('');
+    $('#cus-name, #item-name, #qoh, #unit-price, #order-qty').val('');
     $('#order-customer').prop('selectedIndex', 0);
     $('#order-item').prop('selectedIndex', 0);
     $('#search-cus-id').val('');
@@ -37,6 +38,8 @@ export function resetOrderForm() {
     $('#discount-amount').val('');
     $('#total').val('');
     $('#subtotal').val('');
+    $('#cash').val('');
+    $('#order-balance').val('');
 
     loadCustomersCmb();
     loadItemsCmb();
@@ -159,7 +162,6 @@ $('#add-to-cart').off('click').on('click', function () {
             return;
         }
         cart.push({
-            id: itemCount++,
             itemId,
             itemName,
             quantity: orderQty,
@@ -181,7 +183,7 @@ function updateCartTable() {
         subTotal += item.total;
         tbody.append(`
             <tr>
-                <td>${item.id}</td>
+                <td>${item.itemId}</td>
                 <td>${item.itemName}</td>
                 <td>${item.quantity}</td>
                 <td>${item.unitPrice.toFixed(2)}</td>
@@ -221,6 +223,12 @@ function updateTotal() {
 
     $('#discount-amount').val(discountAmount.toFixed(2));
     $('#total').val(total.toFixed(2));
+
+    const cash = Number($('#cash').val());
+    if (!isNaN(cash)) {
+        const balance = cash - total;
+        $('#order-balance').val(balance >= 0 ? balance.toFixed(2) : "Insufficient");
+    }
 }
 
 $('#order_place').off('click').on('click', () => {
@@ -234,7 +242,9 @@ $('#order_place').off('click').on('click', () => {
         return;
     }
 
-    const newOrder = new OrdersModel(orderId, customerId, total.toFixed(2), date);
+    const roundedTotal = Number(total.toFixed(2));
+    const newOrder = new OrdersModel(orderId, customerId, roundedTotal, date);
+
     orders_db.push(newOrder);
 
     cart.forEach(cartItem => {
@@ -250,6 +260,18 @@ $('#order_place').off('click').on('click', () => {
     Swal.fire({ title: "Success!", text: "Order placed successfully.", icon: "success" });
     resetOrderForm();
     loadOrders();
+});
+
+$('#cash').on('input', function () {
+    const cash = Number($(this).val());
+    const total = Number($('#total').val());
+    const balance = cash - total;
+
+    if (!isNaN(balance) && cash >= 0) {
+        $('#order-balance').val(balance >= 0 ? balance.toFixed(2) : "Insufficient");
+    } else {
+        $('#order-balance').val('');
+    }
 });
 
 $('#order_reset').off('click').on('click', resetOrderForm);
