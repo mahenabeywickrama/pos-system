@@ -235,15 +235,25 @@ $('#order_place').off('click').on('click', () => {
     const orderId = $('#order-id').val();
     const date = $('#order-date').val();
     const customerId = $('#search-cus-id').val();
+    const customerName = $('#cus-name').val();
+    const discountPer = $('#discount').val();
+    const discountAmount = parseFloat($('#discount-amount').val());
     const total = parseFloat($('#total').val());
+    const cash = parseFloat($('#cash').val())
+    const balance = parseFloat($('#order-balance').val())
 
     if (!orderId || !date || !customerId || cart.length === 0 || isNaN(total)) {
         Swal.fire({ title: "Error!", text: "Please fill all order details correctly.", icon: "error" });
         return;
     }
 
-    const roundedTotal = Number(total.toFixed(2));
-    const newOrder = new OrdersModel(orderId, customerId, roundedTotal, date);
+    if (isNaN(cash) || cash < total) {
+        Swal.fire({ title: "Error!", text: "Insufficient cash to place the order.", icon: "error" });
+        return;
+    }
+
+    // const roundedTotal = Number(total.toFixed(2));
+    const newOrder = new OrdersModel(orderId, customerId, customerName, discountPer, discountAmount, total, cash, balance, date);
 
     orders_db.push(newOrder);
 
@@ -275,3 +285,25 @@ $('#cash').on('input', function () {
 });
 
 $('#order_reset').off('click').on('click', resetOrderForm);
+
+$('#search-order-btn').off('click').on('click', () => {
+    const inputId = $('#search-order-id').val().trim();
+    if (!inputId) {
+        Swal.fire({ title: "Error!", text: "Please enter a Order ID.", icon: "error" });
+        return;
+    }
+
+    const order = orders_db.find(order => order.id === inputId);
+    if (order) {
+        $('#date-order').val(order.date);
+        $('#order-cus-id').val(order.cusId);
+        $('#order-cus-name').val(order.customerName);
+        $('#order-discount').val(order.discountPer);
+        $('#order-discount-amount').val(order.discountAmount);
+        $('#order-total').val((order.totalPrice));
+        $('#order-cash').val(order.cash);
+        $('#balance-order').val(order.balance);
+    } else {
+        Swal.fire({ title: "Error!", text: "Order ID not found!", icon: "error" });
+    }
+});

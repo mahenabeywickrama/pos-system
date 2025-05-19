@@ -382,18 +382,77 @@
                         <button id="order_reset" type="button" class="btn btn-secondary">Reset</button>
                     </div>
 
-                    <h5 class="mt-5">Order History</h5>
-                    <table class="table table-bordered">
-                        <thead class="table-light">
-                        <tr>
-                            <th>#</th>
-                            <th>Customer</th>
-                            <th>Total</th>
-                            <th>Date</th>
-                        </tr>
-                        </thead>
-                        <tbody id="order-tbody"></tbody>
-                    </table>
+                    <div class="row mt-4">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-header">Order Search</div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="search-order-id" class="form-label">Search Order ID</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="search-order-id" placeholder="Enter Order ID">
+                                            <button class="btn btn-outline-primary" type="button" id="search-order-btn">Search</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="date-order">Order Date</label>
+                                        <input type="text" id="date-order" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="order-cus-id">Customer ID</label>
+                                        <input type="text" id="order-cus-id" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="order-cus-name">Customer Name</label>
+                                        <input type="text" id="order-cus-name" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="order-discount" class="form-label">Discount (%)</label>
+                                        <input type="number" id="order-discount" class="form-control" value="0" readonly>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="order-discount-amount">Discount Amount</label>
+                                        <input type="text" id="order-discount-amount" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="order-total" class="form-label">Total</label>
+                                        <input type="text" id="order-total" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="order-cash" class="form-label">Cash</label>
+                                        <input type="text" id="order-cash" class="form-control" readonly>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="balance-order" class="form-label">Balance:</label>
+                                        <input type="text" id="balance-order" class="form-control" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-9">
+                            <h4 class="mb-3">Order History</h4>
+                            <table class="table table-bordered">
+                                <thead class="table-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Customer</th>
+                                    <th>Total</th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
+                                <tbody id="order-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </section>
 
