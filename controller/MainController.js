@@ -14,10 +14,6 @@ $('#home-btn').on('click', function () {
     showSection('#home-content', 'Home', this);
 });
 
-$('#dashboard-btn').on('click', function () {
-    showSection('#dashboard-content', 'Dashboard', this);
-});
-
 $('#customer-btn').on('click', function () {
     showSection('#customer-content', 'Customer', this);
     loadCustomers();
