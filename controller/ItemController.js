@@ -3,11 +3,6 @@ import ItemModel from "/model/ItemModel.js";
 
 let selectedIndex = -1;
 
-// $(document).ready(function() {
-//     loadItems();
-//     resetItemForm();
-// });
-
 function generateNextItemId() {
     if (item_db.length === 0) {
         return 'I001';
@@ -20,7 +15,7 @@ function generateNextItemId() {
 }
 
 export function resetItemForm() {
-    $('#item-id').val(generateNextItemId())
+    $('#item-id').val(generateNextItemId());
     $('#item, #qty, #price, #description').val('');
     selectedIndex = -1;
 }
@@ -41,7 +36,31 @@ export function loadItems() {
     });
 }
 
-$('#item_save').off('click').on('click', function(){
+function validateItemInputs(name, qty, price, description) {
+    if (!name || name.length < 2) {
+        Swal.fire({ title: "Invalid Name", text: "Item name must be at least 2 characters.", icon: "error" });
+        return false;
+    }
+
+    if (!/^\d+$/.test(qty) || parseInt(qty) <= 0) {
+        Swal.fire({ title: "Invalid Quantity", text: "Quantity must be a positive whole number.", icon: "error" });
+        return false;
+    }
+
+    if (!/^\d+(\.\d{1,2})?$/.test(price) || parseFloat(price) <= 0) {
+        Swal.fire({ title: "Invalid Price", text: "Price must be a positive number (up to 2 decimal places).", icon: "error" });
+        return false;
+    }
+
+    if (!description || description.length < 5) {
+        Swal.fire({ title: "Invalid Description", text: "Description must be at least 5 characters long.", icon: "error" });
+        return false;
+    }
+
+    return true;
+}
+
+$('#item_save').off('click').on('click', function () {
     let id = $('#item-id').val().trim();
     let name = $('#item').val().trim();
     let qty = $('#qty').val().trim();
@@ -49,12 +68,14 @@ $('#item_save').off('click').on('click', function(){
     let description = $('#description').val().trim();
 
     if (!id || !name || !qty || !price || !description) {
-        Swal.fire({title: "Error!", text: "Please fill required fields", icon: "error"});
+        Swal.fire({ title: "Error!", text: "Please fill all required fields.", icon: "error" });
         return;
     }
 
+    if (!validateItemInputs(name, qty, price, description)) return;
+
     if (item_db.some(i => i.id === id)) {
-        Swal.fire({title: "Error!", text: "Item ID already exists!", icon: "error"});
+        Swal.fire({ title: "Error!", text: "Item ID already exists!", icon: "error" });
         return;
     }
 
@@ -64,12 +85,12 @@ $('#item_save').off('click').on('click', function(){
     loadItems();
     resetItemForm();
 
-    Swal.fire({title: "Added Successfully!", icon: "success"});
+    Swal.fire({ title: "Added Successfully!", icon: "success" });
 });
 
 $('#item_update').off('click').on('click', function () {
     if (selectedIndex === -1) {
-        Swal.fire({title: "No Selection!", text: "Please select a item to update.", icon: "info", confirmButtonText: "Ok"})
+        Swal.fire({ title: "No Selection!", text: "Please select an item to update.", icon: "info" });
         return;
     }
 
@@ -79,17 +100,19 @@ $('#item_update').off('click').on('click', function () {
     let price = $('#price').val();
     let description = $('#description').val();
 
+    if (!validateItemInputs(name, qty, price, description)) return;
+
     item_db[selectedIndex] = new ItemModel(id, name, qty, price, description);
 
     loadItems();
     resetItemForm();
 
-    Swal.fire({title: "Updated Successfully!", icon: "success", draggable: true});
-})
+    Swal.fire({ title: "Updated Successfully!", icon: "success" });
+});
 
 $('#item_delete').off('click').on('click', function () {
     if (selectedIndex === -1) {
-        Swal.fire({title: "No Selection!", text: "Please select a item to delete.", icon: "info", confirmButtonText: "Ok"})
+        Swal.fire({ title: "No Selection!", text: "Please select an item to delete.", icon: "info" });
         return;
     }
 
@@ -105,14 +128,14 @@ $('#item_delete').off('click').on('click', function () {
             loadItems();
             resetItemForm();
 
-            Swal.fire({title: "Deleted Successfully!", icon: "success"});
+            Swal.fire({ title: "Deleted Successfully!", icon: "success" });
         }
     });
 });
 
 $('#item_reset').off('click').on('click', resetItemForm);
 
-$("#item-tbody").off('click').on('click', 'tr', function(){
+$("#item-tbody").off('click').on('click', 'tr', function () {
     const clickedId = $(this).data('id');
     const obj = item_db.find(i => i.id === clickedId);
     selectedIndex = item_db.findIndex(i => i.id === clickedId);
